@@ -1,0 +1,30 @@
+# Python
+venv/
+venv312/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Model files
+*.h5
+
+# Environment
+.env
+.env.*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if added later)
+node_modules/

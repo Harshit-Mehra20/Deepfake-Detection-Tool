@@ -4,16 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Deepfake Detector Panel – DeepDetect</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="assets/css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="script.js"></script>
+<script src="assets/js/script.js"></script>
 </head>
 <body>
 
-<!-- Cursor -->
-<div class="cursor-outer" id="cursorOuter"></div>
-<div class="cursor-inner" id="cursorInner"></div>
+
 
 <!-- Auth Modal -->
 <div class="modal-overlay" id="authModal">
@@ -43,20 +41,7 @@
   </div>
 </div>
 
-<!-- Trial Expired Popup -->
-<div class="trial-popup" id="trialPopup">
-  <button class="popup-close" onclick="closeTrialPopup()"><i class="fas fa-times"></i></button>
-  <div class="popup-icon"><i class="fas fa-crown"></i></div>
-  <h3>Your Free Trial Has Ended</h3>
-  <p>You've used your 7-day free trial. Continue with full access for just ₹500/month.</p>
-  <div class="popup-features">
-    <div><i class="fas fa-check"></i> Unlimited detections</div>
-    <div><i class="fas fa-check"></i> Detailed forensic reports</div>
-    <div><i class="fas fa-check"></i> Priority processing</div>
-  </div>
-  <button class="popup-btn" onclick="startPayment()">Upgrade – ₹500/month</button>
-  <p class="popup-small">Cancel anytime. No hidden fees.</p>
-</div>
+
 
 <!-- Payment Modal -->
 <div class="modal-overlay" id="paymentModal">
@@ -146,10 +131,10 @@
       <span class="logo-text">DeepDetect</span>
     </div>
     <ul class="nav-links">
-      <li><a href="home.html">Home</a></li>
+      <li><a href="pages/home.html">Home</a></li>
       <li><a href="index.html" class="active">Detector</a></li>
-      <li><a href="research.html">Research</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="pages/research.html">Research</a></li>
+      <li><a href="pages/about.html">About</a></li>
     </ul>
     <div class="nav-right">
       <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
@@ -536,7 +521,7 @@ async function handleLogin() {
   const password = document.getElementById('loginPassword').value;
   if (!email || !password) { alert('Please enter email and password'); return; }
   try {
-    const res  = await fetch('http://localhost:3000/api/login', {
+    const res  = await fetch('http://localhost:5000/api/login', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
@@ -560,7 +545,7 @@ async function handleSignup() {
   const password = document.getElementById('signupPassword').value;
   if (!name || !email || !password) { alert('All fields required'); return; }
   try {
-    const res  = await fetch('http://localhost:3000/api/signup', {
+    const res  = await fetch('http://localhost:5000/api/signup', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
     });
@@ -600,23 +585,8 @@ function logoutUser() {
   location.reload();
 }
 
-// ── 7-day trial expiry check ────────────────────────────────────────────────
-// Runs on every page load — no more relying on setTimeout
-function checkTrialExpiry() {
-  const user = JSON.parse(localStorage.getItem('dd_user') || 'null');
-  if (!user || user.plan === 'paid') return; // paid users never see popup
-
-  const trialStart = new Date(user.trial_start);
-  const now        = new Date();
-  const daysPassed = (now - trialStart) / (1000 * 60 * 60 * 24);
-
-  if (daysPassed >= 7) {
-    // Show popup 1.5s after page load so it doesn't feel jarring
-    setTimeout(() => {
-      document.getElementById('trialPopup').classList.add('active');
-    }, 1500);
-  }
-}
+// ── Trial expiry — no popup shown (removed)
+function checkTrialExpiry() {}
 
 // ── Restore session + check trial on every page load ───────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -631,7 +601,7 @@ document.getElementById('authModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-function closeTrialPopup() { document.getElementById('trialPopup').classList.remove('active'); }
+function closeTrialPopup() { /* popup removed */ }
 
 // ── File upload / detection ─────────────────────────────────────────────────
 let hasImage = false;
@@ -769,17 +739,7 @@ function downloadReport() {
   alert('PDF report download would be generated here in the full version.');
 }
 
-// ── Cursor ──────────────────────────────────────────────────────────────────
-const outer = document.getElementById('cursorOuter');
-const inner = document.getElementById('cursorInner');
-document.addEventListener('mousemove', e => {
-  outer.style.transform = `translate(${e.clientX-20}px,${e.clientY-20}px)`;
-  inner.style.transform = `translate(${e.clientX-5}px,${e.clientY-5}px)`;
-});
-document.querySelectorAll('a,button').forEach(el => {
-  el.addEventListener('mouseenter', () => { outer.classList.add('hover'); inner.classList.add('hover'); });
-  el.addEventListener('mouseleave', () => { outer.classList.remove('hover'); inner.classList.remove('hover'); });
-});
+
 </script>
 </body>
 </html>

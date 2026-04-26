@@ -4,14 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Research Paper – DeepDetect</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../assets/css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-<div class="cursor-outer" id="cursorOuter"></div>
-<div class="cursor-inner" id="cursorInner"></div>
+
 
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
@@ -37,13 +36,7 @@
   </div>
 </div>
 
-<div class="trial-popup" id="trialPopup">
-  <button class="popup-close" onclick="closeTrialPopup()"><i class="fas fa-times"></i></button>
-  <div class="popup-icon"><i class="fas fa-crown"></i></div>
-  <h3>Your Free Trial Has Ended</h3>
-  <p>Continue with full access for just ₹500/month.</p>
-  <button class="popup-btn" onclick="switchTab('signup'); closeTrialPopup(); openModal()">Upgrade – ₹500/month</button>
-</div>
+
 
 <header class="site-header">
   <nav class="navbar">
@@ -53,7 +46,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
-      <li><a href="index.html">Detector</a></li>
+      <li><a href="../index.html">Detector</a></li>
       <li><a href="research.html" class="active">Research</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
@@ -460,7 +453,7 @@
     const password = document.getElementById('loginPassword').value;
     if (!email || !password) { alert('Please enter email and password'); return; }
     try {
-      const res  = await fetch('http://localhost:3000/api/login', {
+      const res  = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -481,7 +474,7 @@
     const password = document.getElementById('signupPassword').value;
     if (!name || !email || !password) { alert('All fields required'); return; }
     try {
-      const res  = await fetch('http://localhost:3000/api/signup', {
+      const res  = await fetch('http://localhost:5000/api/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -538,32 +531,8 @@
     if (e.target === this) closeModal();
   });
 
-  setTimeout(() => document.getElementById('trialPopup').classList.add('active'), 10000);
-
-  /* ── Custom Cursor ── */
-  const outer = document.getElementById('cursorOuter');
-  const inner = document.getElementById('cursorInner');
-  let mouseX = 0, mouseY = 0, outerX = 0, outerY = 0;
-
-  document.addEventListener('mousemove', e => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    inner.style.transform = `translate(${mouseX - 5}px, ${mouseY - 5}px)`;
-  });
-
-  (function animateOuter() {
-    outerX += (mouseX - outerX) * 0.15;
-    outerY += (mouseY - outerY) * 0.15;
-    outer.style.transform = `translate(${outerX - 20}px, ${outerY - 20}px)`;
-    requestAnimationFrame(animateOuter);
-  })();
-
-  document.addEventListener('mouseleave', () => { outer.style.opacity='0'; inner.style.opacity='0'; });
-  document.addEventListener('mouseenter', () => { outer.style.opacity='1'; inner.style.opacity='1'; });
-
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => { outer.classList.add('hover'); inner.classList.add('hover'); });
-    el.addEventListener('mouseleave', () => { outer.classList.remove('hover'); inner.classList.remove('hover'); });
-  });
+  // trial popup removed
+  function closeTrialPopup() {}
 
   /* ── Smooth scroll TOC ── */
   document.querySelectorAll('.toc-sidebar a').forEach(a => {

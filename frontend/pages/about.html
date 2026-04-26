@@ -4,13 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About & Contact – DeepDetect</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../assets/css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-<div class="cursor-outer" id="cursorOuter"></div>
-<div class="cursor-inner" id="cursorInner"></div>
+
 
 <div class="modal-overlay" id="authModal">
   <div class="modal-card">
@@ -36,13 +35,7 @@
   </div>
 </div>
 
-<div class="trial-popup" id="trialPopup">
-  <button class="popup-close" onclick="closeTrialPopup()"><i class="fas fa-times"></i></button>
-  <div class="popup-icon"><i class="fas fa-crown"></i></div>
-  <h3>Your Free Trial Has Ended</h3>
-  <p>Continue with full access for just ₹500/month.</p>
-  <button class="popup-btn" onclick="switchTab('signup'); closeTrialPopup(); openModal()">Upgrade – ₹500/month</button>
-</div>
+
 
 <header class="site-header">
   <nav class="navbar">
@@ -52,7 +45,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="home.html">Home</a></li>
-      <li><a href="index.html">Detector</a></li>
+      <li><a href="../index.html">Detector</a></li>
       <li><a href="research.html">Research</a></li>
       <li><a href="about.html" class="active">About</a></li>
     </ul>
@@ -94,28 +87,28 @@
     <h2 class="section-title" style="text-align:center; margin-bottom:2rem;">Built by Researchers</h2>
     <div class="team-grid">
       <div class="team-card">
-        <img src="diksha.jpg" alt="Diksha Asnora">
+        <img src="../diksha.jpg" alt="Diksha Asnora">
         <h4>Diksha Asnora</h4>
         <span>Frontend/Backend Developer</span>
         <p>Architected the end-to-end web application, integrating Deepfake detection APIs with a seamless user interface.</p>
         <div class="team-socials"><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div>
       </div>
       <div class="team-card">
-        <img src="harshit.jpg" alt="Harshit Mehra">
+        <img src="../harshit.jpg" alt="Harshit Mehra">
         <h4>Harshit Mehra</h4>
         <span>Documentation/Database</span>
         <p>Manages system architecture documentation and optimized database schemas for efficient handling of media metadata.</p>
         <div class="team-socials"><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div>
       </div>
       <div class="team-card">
-        <img src="krish.jpg" alt="Krish Lal Shrivastava">
+        <img src="../krish.jpg" alt="Krish Lal Shrivastava">
         <h4>Krish Lal Shrivastava</h4>
         <span>Frontend/Backend Developer</span>
         <p>Developed the server-side logic and real-time processing pipelines to ensure low-latency analysis of uploaded content.<p>
         <div class="team-socials"><a href="#"><i class="fab fa-github"></i></a><a href="#"><i class="fab fa-linkedin"></i></a></div>
       </div>
       <div class="team-card">
-        <img src="shreya.jpg" alt="Shreya Gupta">
+        <img src="../shreya.jpg" alt="Shreya Gupta">
         <h4>Shreya Gupta</h4>
         <span>Researcher</span>
         <p>Focused on the comparative analysis of GAN-based forensics and fine-tuning detection models for high accuracy.</p>
@@ -176,7 +169,7 @@ async function handleLogin() {
   const password = document.getElementById('loginPassword').value;
   if (!email || !password) { alert("Please enter email and password"); return; }
   try {
-    const res = await fetch("http://localhost:3000/api/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email,password}) });
+    const res = await fetch("http://localhost:5000/api/login", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email,password}) });
     const data = await res.json();
     if (data.success) { localStorage.setItem("dd_token",data.token); localStorage.setItem("dd_user",JSON.stringify(data.user)); closeModal(); updateNavbar(data.user); }
     else { alert(data.error||"Login failed"); }
@@ -188,7 +181,7 @@ async function handleSignup() {
   const password = document.getElementById('signupPassword').value;
   if (!name||!email||!password) { alert("All fields required"); return; }
   try {
-    const res = await fetch("http://localhost:3000/api/signup", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({name,email,password}) });
+    const res = await fetch("http://localhost:5000/api/signup", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({name,email,password}) });
     const data = await res.json();
     if (data.success) { localStorage.setItem("dd_token",data.token); localStorage.setItem("dd_user",JSON.stringify(data.user)); closeModal(); updateNavbar(data.user); }
     else { alert(data.error||"Signup failed"); }
@@ -204,17 +197,6 @@ function logoutUser() { localStorage.removeItem("dd_token"); localStorage.remove
 document.addEventListener("DOMContentLoaded", () => { const user = JSON.parse(localStorage.getItem("dd_user")||"null"); if (user) updateNavbar(user); });
 document.getElementById('authModal').addEventListener('click', function(e) { if (e.target===this) closeModal(); });
 
-function closeTrialPopup() { document.getElementById('trialPopup').classList.remove('active'); }
-const outer = document.getElementById('cursorOuter');
-const inner = document.getElementById('cursorInner');
-document.addEventListener('mousemove', e => {
-  outer.style.transform = `translate(${e.clientX-20}px,${e.clientY-20}px)`;
-  inner.style.transform = `translate(${e.clientX-5}px,${e.clientY-5}px)`;
-});
-document.querySelectorAll('a,button').forEach(el => {
-  el.addEventListener('mouseenter', () => { outer.classList.add('hover'); inner.classList.add('hover'); });
-  el.addEventListener('mouseleave', () => { outer.classList.remove('hover'); inner.classList.remove('hover'); });
-});
 </script>
 </body>
 </html>

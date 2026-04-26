@@ -4,16 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Deepfake Detection – Real or Fake?</title>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../assets/css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 
-<!-- Custom Cursor -->
-<div class="cursor-outer" id="cursorOuter"></div>
-<div class="cursor-inner" id="cursorInner"></div>
+
 
 <!-- Auth Modal -->
 <div class="modal-overlay" id="authModal">
@@ -193,7 +191,7 @@
     </div>
     <ul class="nav-links">
       <li><a href="home.html" class="active">Home</a></li>
-      <li><a href="index.html">Detector</a></li>
+      <li><a href="../index.html">Detector</a></li>
       <li><a href="research.html">Research</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
@@ -220,7 +218,7 @@
     <h1 class="hero-title">Can You Trust<br><span class="gradient-text">What You See?</span></h1>
     <p class="hero-desc">Upload any image. Our AI scans for GAN fingerprints, pixel anomalies, and metadata inconsistencies to reveal the truth in seconds.</p>
     <div class="hero-cta">
-      <a href="index.html" class="cta-primary"><i class="fas fa-crosshairs"></i> Analyze Now — It's Free</a>
+      <a href="../index.html" class="cta-primary"><i class="fas fa-crosshairs"></i> Analyze Now — It's Free</a>
       <a href="research.html" class="cta-secondary"><i class="fas fa-file-alt"></i> Read Research Paper</a>
     </div>
     <div class="hero-stats">
@@ -390,7 +388,7 @@
     <div class="footer-links">
       <div class="footer-col">
         <h5>Product</h5>
-        <a href="index.html">Detector</a>
+        <a href="../index.html">Detector</a>
         <a href="research.html">Research</a>
         <a href="#">API Docs</a>
       </div>
@@ -412,7 +410,7 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script src="../assets/js/script.js"></script>
 <script>
 // ── PAYMENT / RAZORPAY ───────────────────────
 // REPLACE with your real Razorpay Key ID from razorpay.com/dashboard
@@ -589,7 +587,7 @@ async function handleLogin() {
   const password = document.getElementById('loginPassword').value;
   if (!email || !password) { alert("Please enter email and password"); return; }
   try {
-    const res = await fetch("http://localhost:3000/api/login", {
+    const res = await fetch("http://localhost:5000/api/login", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
@@ -609,7 +607,7 @@ async function handleSignup() {
   const password = document.getElementById('signupPassword').value;
   if (!name || !email || !password) { alert("All fields are required"); return; }
   try {
-    const res = await fetch("http://localhost:3000/api/signup", {
+    const res = await fetch("http://localhost:5000/api/signup", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password })
     });
@@ -654,7 +652,7 @@ async function handleForgotPassword() {
   const btn = document.querySelector('#forgotForm .modal-btn');
   btn.textContent = 'Sending...'; btn.disabled = true;
   try {
-    const res = await fetch("http://localhost:3000/api/forgot-password", {
+    const res = await fetch("http://localhost:5000/api/forgot-password", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
     });
@@ -707,7 +705,7 @@ async function handleSetNewPassword() {
   const btn = document.querySelector('#newPassForm .modal-btn');
   btn.textContent = 'Updating...'; btn.disabled = true;
   try {
-    const res = await fetch("http://localhost:3000/api/reset-password", {
+    const res = await fetch("http://localhost:5000/api/reset-password", {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: resetEmail, code: resetCode, newPassword: p1 })
     });
@@ -798,24 +796,13 @@ document.getElementById('authModal').addEventListener('click', function(e) {
 
 // Trial popup (show after 8s for demo)
 
-function closeTrialPopup() { document.getElementById('trialPopup').classList.remove('active'); }
+function closeTrialPopup() { /* popup removed */ }
 
 // Mobile menu
 function toggleMobileMenu() {
   document.querySelector('.nav-links').classList.toggle('mobile-open');
 }
 
-// Cursor
-const outer = document.getElementById('cursorOuter');
-const inner = document.getElementById('cursorInner');
-document.addEventListener('mousemove', e => {
-  outer.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
-  inner.style.transform = `translate(${e.clientX - 5}px, ${e.clientY - 5}px)`;
-});
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('mouseenter', () => { outer.classList.add('hover'); inner.classList.add('hover'); });
-  el.addEventListener('mouseleave', () => { outer.classList.remove('hover'); inner.classList.remove('hover'); });
-});
 </script>
 </body>
 </html>
