@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="assets/css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<script src="assets/js/script.js"></script>
+
 </head>
 <body>
 
@@ -667,79 +667,11 @@ function pasteURL() {
   }
 }
 
-function animateProgress(id, txtId, target, delay) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      let val = 0;
-      const step = target / 30;
-      const interval = setInterval(() => {
-        val = Math.min(val + step, target);
-        document.getElementById(id).style.width = val + '%';
-        document.getElementById(txtId).textContent = Math.round(val) + '%';
-        if (val >= target) { clearInterval(interval); resolve(); }
-      }, 40);
-    }, delay);
-  });
-}
-
-function showResults(data) {
-
-  document.getElementById('resultsPlaceholder').classList.add('hidden');
-  document.getElementById('resultsContent').classList.remove('hidden');
-  document.getElementById('analysisProgress').classList.remove('hidden');
-
-  const isFake = data.result === "Deepfake";
-  const confidence = data.confidence;
-
-  const card  = document.getElementById('verdictCard');
-  const icon  = document.getElementById('verdictIcon');
-  const val   = document.getElementById('verdictValue');
-  const conf  = document.getElementById('verdictConf');
-  const score = document.getElementById('verdictScore');
-
-  if (isFake) {
-    card.className = 'verdict-card fake';
-    icon.innerHTML = '<i class="fas fa-times-circle"></i>';
-    val.textContent  = '⚠ DEEPFAKE DETECTED';
-    conf.textContent = `Confidence: ${confidence}%`;
-    score.textContent = `${Math.round(confidence)}%`;
-  } else {
-    card.className = 'verdict-card authentic';
-    icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-    val.textContent  = '✓ AUTHENTIC';
-    conf.textContent = `Confidence: ${confidence}%`;
-    score.textContent = `${Math.round(confidence)}%`;
-  }
-
-  document.getElementById('analysisProgress').classList.add('hidden');
-  document.getElementById('detailGrid').classList.remove('hidden');
-  document.getElementById('reportActions').classList.remove('hidden');
-  document.getElementById('resultsContent').classList.remove('hidden');
-
-  // Fill detail cards based on result
-  if (isFake) {
-  document.getElementById('ganVal').textContent = 'Artifacts detected';
-  document.getElementById('pixelVal').textContent = 'Inconsistent';
-  document.getElementById('faceVal').textContent = 'Anomalies found';
-  document.getElementById('metaVal').textContent = 'Missing data';
-  document.getElementById('lightVal').textContent = 'Mismatch';
-  document.getElementById('compVal').textContent = 'Abnormal';
-  } else {
-  document.getElementById('ganVal').textContent = 'Clean';
-  document.getElementById('pixelVal').textContent = 'Consistent';
-  document.getElementById('faceVal').textContent = 'Normal';
-  document.getElementById('metaVal').textContent = 'Valid';
-  document.getElementById('lightVal').textContent = 'Correct';
-  document.getElementById('compVal').textContent = 'Normal';
-  }
-
-}
-
 function downloadReport() {
   alert('PDF report download would be generated here in the full version.');
 }
 
-
 </script>
+<script src="assets/js/script.js" defer></script>
 </body>
 </html>

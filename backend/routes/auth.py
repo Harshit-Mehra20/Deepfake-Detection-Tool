@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, make_response
 import bcrypt
 import jwt
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from db.database import find_user_by_email, create_user
 
@@ -39,27 +39,27 @@ def _make_token(user_id: int, email: str) -> str:
     payload = {
         'sub': user_id,
         'email': email,
-        'exp': datetime.utcnow() + timedelta(days=7)
+        'exp': datetime.now(timezone.utc) + timedelta(days=7)
     }
     return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
 
 def _user_to_dict(user) -> dict:
     return {
-        'id': user['id'],
-        'name': user['name'],
-        'email': user['email'],
-        'plan': user['plan'],
+        'id':          user['id'],
+        'name':        user['name'],
+        'email':       user['email'],
+        'plan':        user['plan'],
         'trial_start': user['trial_start'],
     }
 
 
 @auth_bp.route('/api/signup', methods=['POST'])
 def signup():
-    data = request.get_json(silent=True) or {}
-    name     = (data.get('name') or '').strip()
-    email    = (data.get('email') or '').strip().lower()
-    password = data.get('password') or ''
+    data     = request.get_json(silent=True) or {}
+    name     = (data.get('name')     or '').strip()
+    email    = (data.get('email')    or '').strip().lower()
+    password =  data.get('password') or ''
 
     if not name or not email or not password:
         return jsonify({'success': False, 'error': 'All fields are required'}), 400
@@ -79,16 +79,16 @@ def signup():
 
     return jsonify({
         'success': True,
-        'token': token,
-        'user': _user_to_dict(user)
+        'token':   token,
+        'user':    _user_to_dict(user)
     }), 201
 
 
 @auth_bp.route('/api/login', methods=['POST'])
 def login():
-    data = request.get_json(silent=True) or {}
-    email    = (data.get('email') or '').strip().lower()
-    password = data.get('password') or ''
+    data     = request.get_json(silent=True) or {}
+    email    = (data.get('email')    or '').strip().lower()
+    password =  data.get('password') or ''
 
     if not email or not password:
         return jsonify({'success': False, 'error': 'Email and password required'}), 400
@@ -100,16 +100,21 @@ def login():
     if not bcrypt.checkpw(password.encode(), user['password_hash'].encode()):
         return jsonify({'success': False, 'error': 'Invalid email or password'}), 401
 
-    # Check trial expiry
-    trial_start  = datetime.fromisoformat(user['trial_start'])
-    days_elapsed = (datetime.utcnow() - trial_start).days
+    # Check trial expiry — both datetimes kept naive (UTC) for consistent comparison
+    try:
+        trial_start = datetime.fromisoformat(user['trial_start'])
+    except (ValueError, TypeError):
+        trial_start = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    now          = datetime.utcnow()   # naive UTC, matches SQLite datetime('now')
+    days_elapsed = (now - trial_start).days
     trial_expired = days_elapsed >= 7 and user['plan'] == 'trial'
 
     token = _make_token(user['id'], email)
 
     return jsonify({
-        'success': True,
-        'token': token,
-        'user': _user_to_dict(user),
+        'success':      True,
+        'token':        token,
+        'user':         _user_to_dict(user),
         'trialExpired': trial_expired
     })
